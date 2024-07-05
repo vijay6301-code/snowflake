@@ -143,6 +143,16 @@ as
 insert into org_db.raw.projects(status,project)
 select distinct(project_status),projects from clean_tbl_history;
 
+--create a procedure to truncate the clean_tbl_history
+
+CREATE OR REPLACE PROCEDURE truncate_my_table()
+RETURNS STRING
+LANGUAGE SQL
+AS
+$$
+TRUNCATE org_db.raw.clean_tbl_history;
+$$;
+
 create or replace task trunctae_clean_tbl_history
 after data_load_projects
 as
@@ -167,17 +177,3 @@ select * from location;
 select * from projects;
 select * from orgs;
 select * from clean_tbl_history;
-
-
-CREATE OR REPLACE PROCEDURE truncate_my_table()
-RETURNS STRING
-LANGUAGE SQL
-AS
-$$
-TRUNCATE org_db.raw.clean_tbl_history;
-$$;
-call truncate_my_table();
-truncate table raw_tbl;
-truncate table clean_tbl;
-truncate table projects;
-
