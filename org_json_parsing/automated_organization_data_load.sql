@@ -158,13 +158,14 @@ after data_load_projects
 as
 call truncate_my_table();
 
-alter task trunctae_clean_tbl_history resume;
-alter task data_load_projects resume;
-alter task data_load_orgs  resume;
-alter task  data_load_location resume;
-alter task data_load_tbl_history resume;
-alter task child_task1  resume;
-alter task parent_task resume;
+alter task trunctae_clean_tbl_history suspend
+;
+alter task data_load_projects suspend;
+alter task data_load_orgs  suspend;
+alter task  data_load_location suspend;
+alter task data_load_tbl_history suspend;
+alter task child_task1  suspend;
+alter task parent_task suspend;
 
 list @org_db.land.my_stage/json/;
 
@@ -177,3 +178,7 @@ select * from location;
 select * from projects;
 select * from orgs;
 select * from clean_tbl_history;
+
+---validation
+
+select distinct(departments) from orgs;
