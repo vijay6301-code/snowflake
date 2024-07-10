@@ -92,6 +92,7 @@ ret string;
 file_format string;
 cnt int;
 copy_stmt string;
+create_stage_stmt  string;
 
 Begin
 ret :='';
@@ -112,8 +113,14 @@ if (:file_type = 'CSV') then
 else 
     file_format := '(type = ''' || :file_type || ''')';
 end if;
-copy_stmt := 'copy into ' || :db || '.' || :sch || '.' || :tbl || '
-      from  @' || :st_loc || '
+
+list @amazon_db.store_schema.raw_stage;
+
+select count(1) into cnt from  table (result_scan(last_query_id()));
+
+if (: cnt >0 ) then
+    copy_stmt := 'copy into ' || :db || '.' || :sch || '.' || :tbl || '
+      from  @amazon_db.store_schema.raw_stage
       file_format = ' || :file_format || '
       on_error = continue
       force = true
@@ -121,15 +128,12 @@ copy_stmt := 'copy into ' || :db || '.' || :sch || '.' || :tbl || '
 
       execute immediate copy_stmt;
       ret := ret || :file_type || ' format files completed successfully.\n';
+else
+    ret := ret || :file_type || ' format files not available.\n';
+end if;
 end for;
 return : ret;
 end;
 
 
 call amazon_db.store_schema.sp_automate_data_copy();
-
-
-
-
-
-
