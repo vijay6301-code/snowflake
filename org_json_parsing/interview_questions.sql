@@ -51,3 +51,31 @@ cte3 as (select *,visits -previous_month as inc from cte2),
 cte4 as (select pageid,dense_rank() over (order by inc desc)as rn from cte3)
 select pageid from cte4
 where rn = 1;
+
+-----find the hirarchical data
+CREATE OR REPLACE TABLE employees (
+    employee_id INT,
+    employee_name STRING,
+    manager_id INT
+);
+
+INSERT INTO employees (employee_id, employee_name, manager_id) VALUES
+(1, 'Alice', NULL),
+(2, 'Bob', 1),
+(3, 'Charlie', 1),
+(4, 'David', 2),
+(5, 'Eve', 2),
+(6, 'Frank', 3);
+select * from employees;
+
+WITH RECURSIVE emp as (
+    select employee_id,employee_name,manager_id,employee_name as path,1 as level  from employees
+    where manager_id is null
+
+    union all
+
+    select e1.employee_id,e1.employee_name,e1.manager_id,concat(e2.path,'>',e1.employee_name)as path,
+    e2.level + 1 as level from employees e1
+    inner join emp e2
+    on e1.manager_id = e2.employee_id  
+)select * from emp;

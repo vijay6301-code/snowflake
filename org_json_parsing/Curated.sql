@@ -1,11 +1,11 @@
 use database amazon_db;
 use schema curated;
-create or replace sequence in_sales_order_seq 
+create or replace  sequence in_sales_order_seq 
   start = 1 
   increment = 1 
 comment='This is sequence for India sales order table';
 
-create or replace sequence us_sales_order_seq 
+create or replace  sequence us_sales_order_seq 
   start = 1 
   increment = 1 
   comment='This is sequence for USA sales order table';
@@ -66,7 +66,7 @@ create or replace table amazon_db.curated.us_sales_order (
  conctact_no varchar(),
  shipping_address varchar()
 );
-create or replace table final_tbl as(
+create or replace table amazon_db.curated.final_tbl as(
 with  final_in_sales as(
     select t1.*,t2.* from amazon_db.source.in_sales_order t1
 left join amazon_db.source.exchange_rate t2

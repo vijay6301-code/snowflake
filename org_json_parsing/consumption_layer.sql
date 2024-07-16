@@ -1,5 +1,6 @@
 use schema consumption;
-create or replace sequence region_dim_seq start = 1 increment = 1 order;
+create or replace sequence region_dim
+ start = 1 increment = 1 order;
 
 create or replace  table region_dim(
   region_id_pk number primary key,
@@ -8,12 +9,12 @@ create or replace  table region_dim(
     isActive text(1)
 );
 
-CREATE  or replace SEQUENCE product_dim_seq
+CREATE  or replace      SEQUENCE product_dim_seq
     START =1
     INCREMENT = 1
     order
    ;
-create or replace table product_dim(
+create or replace  drop table product_dim(
     product_id_pk number primary key,
     mobile_key text,
     Brand text, 
